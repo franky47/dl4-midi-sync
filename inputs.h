@@ -4,7 +4,7 @@ template<unsigned PinA, unsigned PinB, unsigned PinC, unsigned PinD>
 struct ModeEncoder
 {
 public:
-  static inline void setup()
+  inline void setup() const
   {
     pinMode(PinA, INPUT);
     pinMode(PinB, INPUT);
@@ -12,7 +12,7 @@ public:
     pinMode(PinD, INPUT);
   }
 
-  static inline byte read()
+  inline byte read() const
   {
     const byte a = digitalRead(PinA);
     const byte b = digitalRead(PinB);
@@ -97,6 +97,8 @@ public:
   void setup(Listener inListener, T startupValue = T(0))
   {
     mListener = inListener;
+    mLastValue = startupValue;
+    mListener(startupValue);
   }
 
   void read(T inCurrentValue)

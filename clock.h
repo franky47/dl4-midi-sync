@@ -22,12 +22,12 @@
 enum DivisionLengths {
   regular32nd = 3,
   regular16th = 6,
-  regularDotted16th = 9,
   regular8th = 12,
-  regularDotted8th = 18,
   regularQuarter = 24,
-  regularDottedQuarter = 36,
   regularHalf = 48,
+  dotted16th = 9,
+  dotted8th = 18,
+  dottedQuarter = 36,
   triplet32nd = 2,
   triplet16th = 4,
   triplet8th = 8,
@@ -35,10 +35,7 @@ enum DivisionLengths {
   tripletHalf = 32
 };
 
-// 0 1 2 3 4 5 6 7 8 9 a b c
-// • - - - • - - - • - - - • -
-// 0 1 2 3 0 1 2 3 0 1 2 3 0 1
-
+// --
 
 struct Clock
 {
@@ -46,7 +43,7 @@ public:
   inline void setup()
   {
     reset();
-    clockCycle = DivisionLengths::triplet16th;// DivisionLengths::regularQuarter;
+    clockCycle = DivisionLengths::dotted8th;
   }
 
   inline void reset()
