@@ -1,5 +1,4 @@
 #pragma once
-#include <inttypes.h>
 
 enum SettingsAddresses
 {
@@ -8,11 +7,15 @@ enum SettingsAddresses
 
 struct Settings
 {
-  uint8_t midiChannel;
+  byte midiChannel;
 
   inline void load()
   {
     midiChannel = EEPROM.readByte(SettingsAddresses::midiChannel);
+    if (midiChannel == 0 || midiChannel > 16)
+    {
+      midiChannel = 1;
+    }
   }
   inline void save()
   {
