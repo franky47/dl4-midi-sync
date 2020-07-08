@@ -11,21 +11,21 @@ public:
 
   inline void setup()
   {
-    pinMode(LED_BUILTIN, OUTPUT);
+    // pinMode(LED_BUILTIN, OUTPUT);
     reset();
   }
 
   inline void reset()
   {
     pinMode(Pin, INPUT);
-    digitalWrite(LED_BUILTIN, LOW);
+    // digitalWrite(LED_BUILTIN, LOW);
     pulseStartTime = 0;
   }
 
   inline void trigger()
   {
     pinMode(Pin, OUTPUT);
-    digitalWrite(LED_BUILTIN, HIGH);
+    // digitalWrite(LED_BUILTIN, HIGH);
     pulseStartTime = millis();
   }
 

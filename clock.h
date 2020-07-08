@@ -2,23 +2,6 @@
 #include <inttypes.h>
 #include "./runningAverage.h"
 
-// Regular:
-// ••• 1/32nd (3 Clocks)
-// •••••• 1/16th (6 Clocks)
-// ••••••••• Dotted 1/16 (9 Clocks)
-// •••••••••••• 1/8 (12 Clocks)
-// •••••••••••••••••• Dotted 1/8 (18 Clocks)
-// •••••••••••••••••••••••• 1/4 (24 Clocks)
-// •••••••••••••••••••••••••••••••••••• Dotted 1/4 (36 Clocks)
-// •••••••••••••••••••••••••••••••••••••••••••••••• 1/2 (48 Clocks)
-
-// Triplets:
-// •• 1/32T (2 Clocks)
-// •••• 1/16T (4 Clocks)
-// •••••••• 1/8T (8 Clocks)
-// •••••••••••••••• 1/4T (16 Clocks)
-// •••••••••••••••••••••••••••••••• 1/2T (32 Clocks)
-
 enum DivisionLengths {
   regular32nd = 3,
   regular16th = 6,
@@ -71,16 +54,6 @@ public:
       const long tickDuration = now - lastTickTimestamp;
       tickDurationShortAvg.push(tickDuration);
       tickDurationLongAvg.push(tickDuration);
-
-      // // debug
-      // const long avgTickDurationShort = tickDurationShortAvg.average();
-      // const long avgTickDurationLong = tickDurationLongAvg.average();
-      // Serial.print("\tavgS: ");
-      // Serial.print(avgTickDurationShort);
-      // Serial.print("\tavgL: ");
-      // Serial.print(avgTickDurationLong);
-      // // gubed
-
       incrementClockCounter();
       Serial.print("\tsecond tick ");
       return shouldSendPulse();
@@ -121,8 +94,6 @@ private:
 
   inline bool checkForTempoChange(long now)
   {
-    // Serial.print("\tnow: ");
-    // Serial.print(now);
     const long tickDuration = now - lastTickTimestamp;
     Serial.print("\ttick: ");
     Serial.print(tickDuration);
@@ -137,10 +108,6 @@ private:
     tickDurationLongAvg.push(tickDuration);
     const long avgTickDurationShort = tickDurationShortAvg.average();
     const long avgTickDurationLong = tickDurationLongAvg.average();
-    // Serial.print("\tavgS: ");
-    // Serial.print(avgTickDurationShort);
-    // Serial.print("\tavgL: ");
-    // Serial.print(avgTickDurationLong);
     const long delta = abs(avgTickDurationLong - avgTickDurationShort);
     Serial.print("\tdelta: ");
     Serial.print(delta);

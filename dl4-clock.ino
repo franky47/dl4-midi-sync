@@ -77,14 +77,11 @@ void onStart()
 
 void onClock()
 {
-  Serial.print("Clock");
   const bool sendTapTempoPulse = clock.tick();
   if (sendTapTempoPulse)
   {
-    Serial.print(" + Pulse ");
     tapTempoPulse.trigger();
   }
-  Serial.println("");
 }
 
 void onControlChange(byte channel, byte control, byte value)
@@ -92,16 +89,12 @@ void onControlChange(byte channel, byte control, byte value)
   if (control == ccTimeDivision)
   {
     const byte division = ccDivisionMapping[value / 10];
-    Serial.print("CC Division");
-    Serial.println(division);
     clock.setDivision(division);
   }
   if (control == ccSyncEnable)
   {
     const bool enabled = value >= 64;
     MIDI.setHandleClock(enabled ? onClock : nullptr);
-    Serial.print("CC Sync Enable");
-    Serial.println(enabled);
   }
 }
 
@@ -201,8 +194,6 @@ struct SetupMode
 
 // --
 
-long tick = 0;
-
 void setup()
 {
   // IO Setup
@@ -222,17 +213,6 @@ void setup()
   // Listeners
   divisionPotListener.setup(onDivisionPotChange, divisionsPot.read());
   delayModeListener.setup(onDelayModeChange, modeEncoder.read());
-
-  // Power for the MIDI micro-shield
-  // pinMode(2, OUTPUT);
-  // pinMode(3, OUTPUT);
-  // digitalWrite(2, HIGH);
-
-  // Debug
-  Serial.begin(115200);
-  pinMode(LED_BUILTIN, OUTPUT);
-  Serial.println("Arduino Ready");
-  tick = micros();
 }
 
 void loop()
@@ -241,10 +221,4 @@ void loop()
   delayModeListener.read(modeEncoder.read());
   MIDI.read();
   tapTempoPulse.tick();
-
-  // const long tock = micros();
-  // Serial.print("Loop delay (us): ");
-  // Serial.println(tock - tick);
-  // Serial.flush();
-  // tick = tock;
 }
