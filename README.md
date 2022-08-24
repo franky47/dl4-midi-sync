@@ -15,6 +15,10 @@ sync it with MIDI Clock.
 
 ## How It Works
 
+[Read the detailed blog post](./blog-post.md).
+
+TL;DR:
+
 In essence, the Arduino taps the tempo for you. Three taps, at the right
 interval (landing on MIDI clock events), following tempo changes and
 allowing you to select tempo subdivisions.
