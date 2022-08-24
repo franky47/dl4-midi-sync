@@ -1,6 +1,6 @@
 #pragma once
 
-template<unsigned SizeBits, typename T, typename SumType = long long>
+template<unsigned SizeBits, typename Sample = long, typename SumType = long long>
 struct RunningAverage
 {
 public:
@@ -12,25 +12,25 @@ public:
     : index(0)
     , usage(0)
   {
-    memset(buffer, 0, sizeof(T) * sSize);
+    memset(buffer, 0, sizeof(Sample) * sSize);
   }
 
 public:
   inline void reset()
   {
-    memset(buffer, 0, sizeof(T) * sSize);
+    memset(buffer, 0, sizeof(Sample) * sSize);
     index = 0;
     usage = 0;
   }
 
-  inline void push(T input)
+  inline void push(Sample input)
   {
     buffer[index] = input;
     index = (index + 1) & sMask;
     usage = min(usage + 1, sSize);
   }
 
-  inline T average() const
+  inline Sample average() const
   {
     if (usage == 0)
     {
@@ -50,7 +50,7 @@ public:
   }
 
 private:
-  T buffer[sSize];
+  Sample buffer[sSize];
   unsigned index;
   unsigned usage;
 };
