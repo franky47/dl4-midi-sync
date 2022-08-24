@@ -1,11 +1,11 @@
-#include <USB-MIDI.h>
+#include <MIDI.h>
 #include <EEPROMex.h>
 #include "./pulseGenerator.h"
 #include "./clock.h"
 #include "./inputs.h"
 #include "./settings.h"
 
-USBMIDI_CREATE_DEFAULT_INSTANCE();
+MIDI_CREATE_DEFAULT_INSTANCE();
 
 // Pin mapping --
 
