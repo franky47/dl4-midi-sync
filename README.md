@@ -48,8 +48,8 @@ is used for the MIDI input.
 The four pins of the delay mode encoder are read to disable the sync when
 the DL4 is set to Looper mode (where the Tap Tempo switch has another function). The encoder is also used to set the MIDI channel in setup mode.
 
-MIDI CC [number here] is used for tempo subdivision
-MIDI CC [number here] is used to enable/disable the sync
+MIDI CC 10 is used for tempo subdivision
+MIDI CC 74 is used to enable/disable the sync
 
 The Delay Time potentiometer is read to control the tempo subdivision.
 Not all values are available, only 9 have been selected to land on the 9
@@ -76,10 +76,9 @@ the following operation:
 - ...
 - Auto-volume Echo is channel 16
 
-3. Press the Tap Tempo switch, and while it's pressed, power on the DL4
-4. Wait 5 seconds
+3. Press the Tap Tempo switch, and **while it's pressed**, power on the DL4
+4. Wait 3 seconds
 5. Release the Tap Tempo switch: the MIDI channel is now saved.
-6. Power off and on again normally to restart the DL4 into normal mode.
 
 ## FAQ
 
