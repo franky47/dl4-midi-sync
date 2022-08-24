@@ -185,16 +185,13 @@ struct SetupMode
         settings.midiChannel = 16;
         break;
     }
+    settings.save();
 
     // Wait for the Tap Tempo pin to be released
     while (digitalRead(tapTempoPin) == LOW)
     {
       delay(10);
     }
-    settings.save();
-
-    // Never return, wait for a power cycle.
-    for (;;) {}
   }
 };
 
@@ -206,8 +203,8 @@ void setup()
   tapTempoPulse.setup();
   modeEncoder.setup();
   divisionsPot.setup();
+  SetupMode::run();
   settings.load();
-  SetupMode::run(); // This may never return
 
   MIDI.begin(settings.midiChannel);
   MIDI.setHandleClock(onClock);
