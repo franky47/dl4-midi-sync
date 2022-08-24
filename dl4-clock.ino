@@ -34,7 +34,48 @@ ModeEncoder<
   modeEncoderPin4
 > modeEncoder;
 
-bool isSyncEnabled = true;
+// --
+
+// Declarations to be used by the controller
+void onClock();
+
+struct Controller
+{
+public:
+  static inline void setup()
+  {
+    isInLooperMode = modeEncoder.read() == DelayModes::looper;
+    isSyncEnabledByCC = true;
+    updateState();
+  }
+
+  static inline void onDelayModeChange(byte mode)
+  {
+    isInLooperMode = mode == DelayModes::looper;
+    updateState();
+  }
+  static inline void onSyncEnableCC(bool enableSync)
+  {
+    isSyncEnabledByCC = enableSync;
+    updateState();
+  }
+
+private:
+  static inline void updateState()
+  {
+    const bool enableClockCallback = !isInLooperMode && isSyncEnabledByCC;
+    MIDI.setHandleClock(enableClockCallback ? onClock : nullptr);
+  }
+
+private:
+  static bool isInLooperMode;
+  static bool isSyncEnabledByCC;
+};
+
+bool Controller::isInLooperMode;
+bool Controller::isSyncEnabledByCC;
+
+// --
 
 static const DivisionLengths divisionPotMapping[9] = {
   DivisionLengths::regular32nd,
@@ -95,8 +136,8 @@ void onControlChange(byte channel, byte control, byte value)
   }
   if (control == ccSyncEnable)
   {
-    isSyncEnabled = value >= 64;
-    MIDI.setHandleClock(isSyncEnabled ? onClock : nullptr);
+    const bool enableSync = value >= 64;
+    Controller::onSyncEnableCC(enableSync);
   }
 }
 
@@ -105,15 +146,6 @@ void onControlChange(byte channel, byte control, byte value)
 void onDivisionPotChange(byte index)
 {
   clock.setDivision(divisionPotMapping[index]);
-}
-
-void onDelayModeChange(byte mode)
-{
-  MIDI.setHandleClock(
-    (mode == DelayModes::looper || !isSyncEnabled)
-      ? nullptr
-      : onClock
-  );
 }
 
 // --
@@ -207,7 +239,7 @@ void setup()
   settings.load();
 
   MIDI.begin(settings.midiChannel);
-  MIDI.setHandleClock(onClock);
+  Controller::setup();
   MIDI.setHandleControlChange(onControlChange);
   MIDI.setHandleStart(onStart);
   MIDI.turnThruOff();
@@ -215,7 +247,7 @@ void setup()
 
   // Listeners
   divisionPotListener.setup(onDivisionPotChange, divisionsPot.read());
-  delayModeListener.setup(onDelayModeChange, modeEncoder.read());
+  delayModeListener.setup(Controller::onDelayModeChange, modeEncoder.read());
 }
 
 void loop()
