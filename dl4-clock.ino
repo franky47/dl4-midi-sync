@@ -34,6 +34,8 @@ ModeEncoder<
   modeEncoderPin4
 > modeEncoder;
 
+bool isSyncEnabled = true;
+
 static const DivisionLengths divisionPotMapping[9] = {
   DivisionLengths::regular32nd,
   DivisionLengths::regular16th,
@@ -93,8 +95,8 @@ void onControlChange(byte channel, byte control, byte value)
   }
   if (control == ccSyncEnable)
   {
-    const bool enabled = value >= 64;
-    MIDI.setHandleClock(enabled ? onClock : nullptr);
+    isSyncEnabled = value >= 64;
+    MIDI.setHandleClock(isSyncEnabled ? onClock : nullptr);
   }
 }
 
@@ -107,7 +109,11 @@ void onDivisionPotChange(byte index)
 
 void onDelayModeChange(byte mode)
 {
-  MIDI.setHandleClock(mode == DelayModes::looper ? nullptr : onClock);
+  MIDI.setHandleClock(
+    (mode == DelayModes::looper || !isSyncEnabled)
+      ? nullptr
+      : onClock
+  );
 }
 
 // --
