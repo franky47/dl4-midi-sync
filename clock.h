@@ -27,6 +27,10 @@ public:
   {
     reset();
     clockCycle = DivisionLengths::dotted8th;
+    Serial.begin(115200);
+    while (!Serial) {
+      delay(10);
+    }
   }
 
   inline void reset()
